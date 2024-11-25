@@ -1,0 +1,227 @@
+:root{
+    --primary-color: #14181C;
+    --secondary-color: #2b333c;
+    --light-primary-color: #1e252c;
+    --light-secondary-color: hsl(212, 17%, 25%);
+    --green: #97b96a;
+    --green-hover: hsl(86, 52%, 65%);
+}
+
+*, *::after, *::before {
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-image: linear-gradient(var(--light-primary-color), var(--primary-color));
+}
+
+a {
+    text-decoration: none;
+}
+
+.main_header, .main_header div, .main_header .identidade {
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    padding: .2rem 2rem;
+}
+
+.main_header {
+    justify-content: space-between;
+}
+
+.main_header .identidade {
+    gap: 1rem;
+}
+
+.main_header div {
+    gap: 3rem;
+}
+
+.main_header div form {
+    display: flex;
+    gap: 1rem;
+}
+
+.logo {
+    width: 4.5rem;
+}
+
+.main_title {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.input {
+    padding: .5rem .5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: none;
+}
+
+.input:hover,
+.input:focus {
+    outline: none;
+}
+
+.input_light {
+    color: var(--secondary-color);
+}
+
+.input_dark {
+    background-color: var(--secondary-color);
+    color: rgba(255, 255, 255, 0.423);
+}
+
+.login {
+    background-color: var(--green);
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: .5rem 1.5rem;
+    border: none;
+}
+
+.login:hover,
+.login:focus {
+    background-color: var(--green-hover);
+    cursor: pointer;
+    outline: 2px solid white;
+}
+
+.main_aside {
+    background-color: var(--secondary-color);
+}
+
+.options {
+    display: flex;
+    list-style: none;
+    justify-content: space-evenly;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0 8rem;
+}
+
+.options li {
+    width: 100%;
+    text-align: center;
+    
+}
+
+.options li:hover,
+.card .a_card:hover {
+    background-color: #1e252c;
+}
+
+.options li:hover a,
+.card .a_card:hover {
+    font-weight: bold;
+}
+
+.options a {
+    display: block;
+    padding: .5rem;
+    color: white;
+}
+
+.carrossel {
+    display: flex;
+    /* justify-content: space-evenly; */
+    padding: 3rem 0;
+    gap: 2rem;
+    max-width: 80rem;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    transition: transform .5s ease-in-out,
+    opacity .5s ease-in-out,
+    background-color .5s ease-in-out;
+    position: relative;
+    /* background-color: white; */
+}
+
+.card .img_card img {
+    width: 18.125rem;
+    display: block;
+}
+
+.card .img_card img:hover, 
+.card:has(.teste:hover) .img_card img {
+    opacity: 60%;
+    cursor: pointer;
+}
+
+.card .img_card:hover .teste {
+    opacity: 100%;
+}
+
+.card:hover {
+    background-color: white;
+}
+
+.card .a_card {
+    display: block;
+    background-color: var(--secondary-color);
+    color: white;
+    text-align: center;
+    padding: .5rem;
+    font-weight: 100;
+    font-size: 1.2rem;
+}
+
+
+.teste {
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    color: black;
+    font-size: 3rem;
+    opacity: 0;
+    
+}
+
+.teste:hover {
+    opacity: 100%;
+    cursor: pointer;
+    user-select: none;
+}
+
+.arrow {
+    position: absolute;
+    background-color: var(--secondary-color);
+    padding: .7rem;
+    color: white;
+    top: 50vh;
+    font-size: 1.5rem;
+}
+
+.arrow:hover {
+    background-color: var(--light-secondary-color);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.left {
+    left: 0;
+}
+
+.right {
+    right: 0;
+}
