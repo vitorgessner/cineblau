@@ -64,11 +64,16 @@ a {
     font-weight: bold;
 }
 
-.input {
+.input,
+.inputData {
     padding: .5rem .5rem;
     font-weight: bold;
     font-size: 1.1rem;
     border: none;
+}
+
+.inputData {
+    margin: 0 1rem;
 }
 
 .input:hover,
@@ -80,12 +85,12 @@ a {
     color: var(--secondary-color);
 }
 
-.input_dark {
+.input_dark  {
     background-color: var(--secondary-color);
     color: rgba(255, 255, 255, 0.423);
 }
 
-.login {
+.button {
     background-color: var(--green);
     color: white;
     font-weight: bold;
@@ -139,7 +144,7 @@ a {
 .carrossel {
     display: flex;
     /* justify-content: space-evenly; */
-    padding: 3rem 0;
+    padding: 3rem 0 2rem;
     gap: 2rem;
     max-width: 80rem;
     margin: auto;
@@ -224,4 +229,69 @@ a {
 
 .right {
     right: 0;
+}
+
+/* ------------------------------------------------------------------- */
+.filtro form {
+    text-align: center;
+    margin: 1rem;
+}
+
+.tabela {
+    margin: 3rem auto;
+}
+
+.tabela, td, th {
+    border: 2px solid var(--primary-color);
+    background-color: var(--light-secondary-color);
+    border-collapse: collapse;
+    padding: .5rem 1rem .5rem 1rem;
+    color: white;
+    text-align: left;
+    /* background-color: white; */
+}
+
+.tabela tbody tr:nth-child(odd) td {
+    background-color: var(--light-primary-color);
+}
+
+.tabela tbody tr:hover td {
+    background-color: var(--green);
+    cursor: pointer;
+}
+
+.tabela tbody tr td:last-of-type,
+.tabela tbody tr td:first-of-type{
+    text-align: center;
+}
+
+.classificacao {
+    background-color: black;
+    padding: .3rem;
+    font-weight: bold;
+}
+
+.l {
+    background-color: forestgreen;
+    padding: .3rem .57rem;
+}
+
+.dez {
+    background-color: lightskyblue;
+}
+
+.doze {
+    background-color: rgb(195, 195, 0);
+}
+
+.catorze {
+    background-color: orangered;
+}
+
+.dezesseis {
+    background-color: red;
+}
+
+.dezoito {
+    background-color: black;
 }
