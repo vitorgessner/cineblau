@@ -35,7 +35,7 @@ if ($_GET) {
 
 <body>
     <header class="main_header">
-        <a class="identidade" href="index.html">
+        <a class="identidade" href="index.php">
             <img src="images/logoCinebg.png" alt="logo" class="logo">
             <h1 class="main_title">Cineblau</h1>
         </a>
@@ -56,7 +56,7 @@ if ($_GET) {
 
     <aside class="main_aside">
         <ul class="options">
-            <li><a href="index.html">Em cartaz</a></li>
+            <li><a href="index.php">Em cartaz</a></li>
             <li><a href="sessoes.php">Sessões</a></li>
             <li><a href="salas.php">Salas</a></li>
             <li><a href="emBreve.php">Em breve</a></li>

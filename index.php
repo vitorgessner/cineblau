@@ -1,13 +1,13 @@
-<?php 
-require "config.php";
+<?php
+require 'config.php';
 
 $pdo = getPDO();
 
-$sql = "Select tipo, descricao, capacidade, preco from Tipo_sala;";
+$sql = "CALL emCartaz();";
 
 $resultado = $pdo->query($sql);
 
-$salas = $resultado->fetchAll(PDO::FETCH_ASSOC);
+$emCartaz = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -17,7 +17,10 @@ $salas = $resultado->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/x-icon" href="images/logoCinebg.png">
+    <script src="script/carrossel.js" defer></script>
     <title>Cineblau</title>
 </head>
 
@@ -53,21 +56,20 @@ $salas = $resultado->fetchAll(PDO::FETCH_ASSOC);
         </ul>
     </aside>
 
-    <main class="salas">
-        <?php foreach($salas as $sala) {?>
-        <article class="card_salas">
-            <h2 class="card_title"><?= $sala['tipo']?></h2>
-            <div class="card_info">
-                <p><?= $sala['descricao']?></p>
-                <hr>
-                <p>Capacidade: <?= $sala['capacidade']?> assentos</p>
-                <hr>
-                <p>Preço: R$<?= $sala['preco']?></p>
-            </div>
-        </article>
-        <?php }?>
+    <main>
+        <div class="carrossel">
+            <?php foreach ($emCartaz as $caminho) { ?>
+                <article class="card">
+                    <a href="" class="img_card"><img src="images/<?= $caminho['posterCaminho'] ?>" alt="">
+                        <div class="teste">+</div>
+                    </a>
+                    <a href="#" class="a_card">Sessões</a>
+                </article>
+            <?php } ?>
         </div>
 
+        <div class="arrow right">&#10095;</div>
+        <div class="arrow left">&#10094;</div>
     </main>
 </body>
 
