@@ -45,7 +45,7 @@ $salas = $resultado->fetchAll(PDO::FETCH_ASSOC);
     <aside class="main_aside">
         <ul class="options">
             <li><a href="index.php">Em cartaz</a></li>
-            <li><a href="sessoes.php">Sessões</a></li>
+            <li><a href="sessoes.php?data=<?=date("Y-m-d")?>">Sessões</a></li>
             <li><a href="salas.php">Salas</a></li>
             <li><a href="emBreve.php">Em breve</a></li>
             <li><a href="reprises.php">Reprises</a></li>

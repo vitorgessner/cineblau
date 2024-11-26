@@ -1,31 +1,26 @@
-<?php
+<?php 
 require 'config.php';
 
 $pdo = getPDO();
 
-$sql = "CALL emCartaz();";
+$sql = "CALL emBreve();";
 
 $resultado = $pdo->query($sql);
 
-$emCartaz = $resultado->fetchAll(PDO::FETCH_ASSOC);
+$emBreve = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/x-icon" href="images/logoCinebg.png">
-    <script src="script/carrossel.js" defer></script>
     <title>Cineblau</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    <header class="main_header">
+<header class="main_header">
         <a class="identidade" href="index.php">
             <img src="images/logoCinebg.png" alt="logo" class="logo">
             <h1 class="main_title">Cineblau</h1>
@@ -58,7 +53,7 @@ $emCartaz = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
     <main>
         <div class="carrossel">
-            <?php foreach ($emCartaz as $caminho) { ?>
+            <?php foreach ($emBreve as $caminho) { ?>
                 <article class="card">
                     <a href="" class="img_card"><img src="images/<?= $caminho['posterCaminho'] ?>" alt="">
                         <div class="teste">+</div>
@@ -72,5 +67,4 @@ $emCartaz = $resultado->fetchAll(PDO::FETCH_ASSOC);
         <div class="arrow left">&#10094;</div>
     </main>
 </body>
-
 </html>

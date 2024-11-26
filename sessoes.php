@@ -11,7 +11,11 @@ $resultado = $pdo->query($sql);
 $sessoes = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_GET) {
-    $data = $_GET['data'];
+    $data = $_GET['data'] ?? date("Y-m-d");
+
+    if ($data == ""){
+        $data = date("Y-m-d");
+    }
 
     $sql = "call sessoesData('$data');";
 
@@ -57,7 +61,7 @@ if ($_GET) {
     <aside class="main_aside">
         <ul class="options">
             <li><a href="index.php">Em cartaz</a></li>
-            <li><a href="sessoes.php">Sessões</a></li>
+            <li><a href="sessoes.php?data=<?=date("Y-m-d")?>">Sessões</a></li>
             <li><a href="salas.php">Salas</a></li>
             <li><a href="emBreve.php">Em breve</a></li>
             <li><a href="reprises.php">Reprises</a></li>
