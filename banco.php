@@ -1,9 +1,7 @@
 <?php 
     require 'config.php';
 
-    $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
-
-    $pdo = new PDO($dsn, $user, $password);
+    $pdo = getPDO();
 
     if ($_POST){
         $titulo = $_POST['titulo'];

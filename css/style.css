@@ -295,3 +295,41 @@ a {
 .dezoito {
     background-color: black;
 }
+
+/* -------------------------------------------------- */
+
+.salas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 21rem;
+    color: white;
+    max-width: fit-content;
+}
+
+.card_salas {
+    /* margin: auto; */
+    width: 20%;
+
+}
+
+.card_title {
+    margin: 1.5rem 0 .5rem;
+}
+
+.card_info {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary-color);
+    padding: 1.2rem;
+}
+
+.card_info p {
+    margin: 0;
+    padding: .5rem 0;
+    
+}
+
+hr {
+    width: 100%;
+}

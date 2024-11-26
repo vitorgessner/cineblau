@@ -2,9 +2,7 @@
 
 require 'config.php';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
-
-$pdo = new PDO($dsn, $user, $password);
+$pdo = getPDO();
 
 $sql = "select * from view_sessoes";
 
@@ -60,10 +58,10 @@ if ($_GET) {
         <ul class="options">
             <li><a href="index.html">Em cartaz</a></li>
             <li><a href="sessoes.php">Sessões</a></li>
-            <li><a href="#">Salas</a></li>
-            <li><a href="#">Em breve</a></li>
-            <li><a href="#">Reprises</a></li>
-            <li><a href="#">Contato</a></li>
+            <li><a href="salas.php">Salas</a></li>
+            <li><a href="emBreve.php">Em breve</a></li>
+            <li><a href="reprises.php">Reprises</a></li>
+            <li><a href="contato.php">Contato</a></li>
         </ul>
     </aside>
 
