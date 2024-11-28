@@ -16,14 +16,16 @@ html{
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
-    height: 100vh;
+    height: 100%;
+    background-image: linear-gradient(var(--light-primary-color), var(--primary-color));
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 body {
     margin: 0;
     padding: 0;
-    height: 100%;
-    background-image: linear-gradient(var(--light-primary-color), var(--primary-color));
+    height: 100%; 
 }
 
 a {
@@ -333,4 +335,104 @@ a {
 
 hr {
     width: 100%;
+}
+
+/* -------------------------------------------------------------- */
+
+.card_breve {
+    display: flex;
+    background-color: var(--secondary-color);
+    gap: 1rem;
+    margin: 2rem auto;
+    padding: 1rem;
+    max-width: fit-content;
+    justify-content: center;
+}
+
+.poster img {
+    width: 15rem;
+}
+
+.info_breve {
+    color: white;
+}
+
+.card_breve h2,
+.card_breve h3,
+.card_breve h4,
+.card_breve p {
+    margin: 1rem 0;
+}
+
+.card_breve h2 {
+    margin-top: 0;
+}
+
+.card_breve h2,
+.card_breve p {
+    max-width: 30rem;
+    text-align: justify;
+}
+
+/* ---------------------------------------------------------- */
+
+.sectionCidades {
+    margin: 2rem auto;
+    background-color: var(--secondary-color);
+    width: fit-content;
+}
+
+.sectionCidades h2,
+.sectionCidades h3,
+.sectionCidades h4,
+.sectionCidades p {
+    color: white;
+    margin: 0;
+    padding: 1rem;
+}
+
+.sectionCidades .h2 {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 2rem;
+}
+
+.sectionCidades h2 {
+    margin: 0;
+}
+
+.listaCidades {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.listaCidades a {
+    color: white;
+    display: block;
+    padding: 1rem;
+}
+
+.listaCidades a:hover {
+    background-color: var(--light-secondary-color);
+}
+
+.listaCidades li:nth-of-type(odd) {
+    background-color: var(--light-primary-color);
+}
+
+.sessoes {
+    margin: auto;
+    color: white;
+    background-color: var(--secondary-color);
+    padding: 1rem;
+    /* display: inline-block; */
+    text-align: center;
+}
+
+@media (min-width: 105em) {
+    .salas {
+        column-gap: 25rem;
+    }
 }

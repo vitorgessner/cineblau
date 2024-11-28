@@ -8,6 +8,7 @@ $sql = "Select tipo, descricao, capacidade, preco from Tipo_sala;";
 $resultado = $pdo->query($sql);
 
 $salas = $resultado->fetchAll(PDO::FETCH_ASSOC);
+$cidadeURL = $_GET['cidade'];
 
 ?>
 
@@ -44,12 +45,12 @@ $salas = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
     <aside class="main_aside">
         <ul class="options">
-            <li><a href="index.php">Em cartaz</a></li>
-            <li><a href="sessoes.php?data=<?=date("Y-m-d")?>">Sessões</a></li>
-            <li><a href="salas.php">Salas</a></li>
-            <li><a href="emBreve.php">Em breve</a></li>
-            <li><a href="reprises.php">Reprises</a></li>
-            <li><a href="contato.php">Contato</a></li>
+        <li><a href="cartaz.php?cidade=<?= $cidadeURL?>">Em cartaz</a></li>
+            <li><a href="sessoes.php?cidade=<?= $cidadeURL?>">Sessões</a></li>
+            <li><a href="salas.php?cidade=<?= $cidadeURL?>">Salas</a></li>
+            <li><a href="emBreve.php?cidade=<?= $cidadeURL?>">Em breve</a></li>
+            <li><a href="reprises.php?cidade=<?= $cidadeURL?>">Reprises</a></li>
+            <li><a href="endereco.php?cidade=<?= $cidadeURL?>">Endereço</a></li>
         </ul>
     </aside>
 

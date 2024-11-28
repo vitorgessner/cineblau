@@ -2,6 +2,8 @@
 
 require 'config.php';
 
+$cidadeURL = $_GET['cidade'];
+
 $pdo = getPDO();
 
 $sql = "select * from view_sessoes";
@@ -10,14 +12,18 @@ $resultado = $pdo->query($sql);
 
 $sessoes = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
-if ($_GET) {
-    $data = $_GET['data'] ?? date("Y-m-d");
-
-    if ($data == ""){
-        $data = date("Y-m-d");
+if ($_POST) {
+    $data = $_REQUEST['data'] ?? date("Y-m-d");
+    if ($data != ""){
+        $dataQuebrada = explode("-", $data);
+        $dataFormatada = $dataQuebrada[2] . '/' . $dataQuebrada[1] . '/' . $dataQuebrada[0];
     }
 
     $sql = "call sessoesData('$data');";
+
+    if ($data == "") {
+        $sql = "select * from view_sessoes";
+    }
 
     $resultado = $pdo->query($sql);
 
@@ -60,21 +66,29 @@ if ($_GET) {
 
     <aside class="main_aside">
         <ul class="options">
-            <li><a href="index.php">Em cartaz</a></li>
-            <li><a href="sessoes.php?data=<?=date("Y-m-d")?>">Sessões</a></li>
-            <li><a href="salas.php">Salas</a></li>
-            <li><a href="emBreve.php">Em breve</a></li>
-            <li><a href="reprises.php">Reprises</a></li>
-            <li><a href="contato.php">Contato</a></li>
+            <li><a href="cartaz.php?cidade=<?= $cidadeURL ?>">Em cartaz</a></li>
+            <li><a href="sessoes.php?cidade=<?= $cidadeURL ?>">Sessões</a></li>
+            <li><a href="salas.php?cidade=<?= $cidadeURL ?>">Salas</a></li>
+            <li><a href="emBreve.php?cidade=<?= $cidadeURL ?>">Em breve</a></li>
+            <li><a href="reprises.php?cidade=<?= $cidadeURL ?>">Reprises</a></li>
+            <li><a href="endereco.php?cidade=<?= $cidadeURL ?>">Endereço</a></li>
         </ul>
     </aside>
 
     <main>
         <section class="filtro">
-            <form action="" method="get">
+            <form action="?cidade=<?= $cidadeURL ?>" method="post">
                 <input type="date" name="data" id="data" class="inputData input_dark">
                 <button class="button">Filtrar</button>
             </form>
+            <p class="sessoes"><?php 
+            if (isset($data)) {
+                if ($data != "") {
+                    echo "Sessões do dia: " . $dataFormatada;
+                }
+            } else {
+                echo "Todas as sessões";   
+            }?></p>
         </section>
 
         <table class="tabela">

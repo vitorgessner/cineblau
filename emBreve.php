@@ -1,4 +1,4 @@
-<?php 
+<?php
 require 'config.php';
 
 $pdo = getPDO();
@@ -8,19 +8,23 @@ $sql = "CALL emBreve();";
 $resultado = $pdo->query($sql);
 
 $emBreve = $resultado->fetchAll(PDO::FETCH_ASSOC);
+$resultado->closeCursor();
+$cidadeURL = $_GET['cidade'];
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cineblau</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<header class="main_header">
+    <header class="main_header">
         <a class="identidade" href="index.php">
             <img src="images/logoCinebg.png" alt="logo" class="logo">
             <h1 class="main_title">Cineblau</h1>
@@ -42,29 +46,55 @@ $emBreve = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
     <aside class="main_aside">
         <ul class="options">
-            <li><a href="index.php">Em cartaz</a></li>
-            <li><a href="sessoes.php?data=<?=date("Y-m-d")?>">Sessões</a></li>
-            <li><a href="salas.php">Salas</a></li>
-            <li><a href="emBreve.php">Em breve</a></li>
-            <li><a href="reprises.php">Reprises</a></li>
-            <li><a href="contato.php">Contato</a></li>
+        <li><a href="cartaz.php?cidade=<?= $cidadeURL?>">Em cartaz</a></li>
+            <li><a href="sessoes.php?cidade=<?= $cidadeURL?>">Sessões</a></li>
+            <li><a href="salas.php?cidade=<?= $cidadeURL?>">Salas</a></li>
+            <li><a href="emBreve.php?cidade=<?= $cidadeURL?>">Em breve</a></li>
+            <li><a href="reprises.php?cidade=<?= $cidadeURL?>">Reprises</a></li>
+            <li><a href="endereco.php?cidade=<?= $cidadeURL?>">Endereço</a></li>
         </ul>
     </aside>
 
     <main>
-        <div class="carrossel">
-            <?php foreach ($emBreve as $caminho) { ?>
-                <article class="card">
-                    <a href="" class="img_card"><img src="images/<?= $caminho['posterCaminho'] ?>" alt="">
-                        <div class="teste">+</div>
-                    </a>
-                    <a href="#" class="a_card">Sessões</a>
-                </article>
-            <?php } ?>
-        </div>
+        <?php foreach($emBreve as $caminho) {
+            $titulo = $caminho['titulo'];
+            $estreia = $caminho['estreia'];
+            $estreiaQuebrada = explode("-", $estreia);
+            $estreiaFormatada = $estreiaQuebrada[2] . '/' . $estreiaQuebrada[1] . '/' . $estreiaQuebrada[0];?>
+        <article class="card_breve">
+            <div class="poster card">
+                <a href="" class="img_card"><img src="images/<?= $caminho['posterCaminho']?>" alt="poster">
+            <div class="teste">+</div></a>
+            </div>
+            <div class="info_breve">
+                <h2>Título: <?= $titulo?></h2>
+                <hr>
+                <h3>Diretor: <?= $caminho['diretor']?></h3>
+                <hr>
+                <h4>Elenco: <?php 
+                
+                $sql = "call atorFilme('$titulo');";
 
-        <div class="arrow right">&#10095;</div>
-        <div class="arrow left">&#10094;</div>
+                $resultado = $pdo->query($sql);
+                
+                $elenco = $resultado->fetchAll(PDO::FETCH_ASSOC);
+                $resultado->closeCursor();
+                
+                foreach($elenco as $idx => $ator){
+                    if ($idx == count($elenco) - 1) {
+                        echo $ator['elenco'];
+                    } else {
+                        echo $ator['elenco'] . ", ";
+                    }
+                } ?></h4>
+                <hr>
+                <p>Sinopse: <?= $caminho['sinopse']?></p>
+                <hr>
+                <p>Estreia: <?= $estreiaFormatada?></p>
+            </div>
+        </article>
+        <?php }?>
     </main>
 </body>
+
 </html>
