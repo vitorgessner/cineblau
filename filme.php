@@ -176,8 +176,6 @@ if (isset($_POST['acao'])) {
 
         $resultado->execute();
         header("location: filme.php?cidade='$cidadeURL'");
-    } else if (preg_match("/^editar/", $_POST['acao'])){
-        var_dump($_POST);
     } else {
         var_dump($_POST);
     }
@@ -214,7 +212,7 @@ if (isset($_POST['adicionar'])) {
     $duracao = $_POST['duracao'];
     $premiacao = $_POST['premiacao'];
     $categoria = $_POST['categoria'];
-    $data = $_POST['data'];
+    $data = $_POST['data_premiacao'];
 
     if (isset($_FILES['poster']) && $_FILES['poster']['error'] == 0) {
         $nome_original = $_FILES['poster']['name'];
@@ -248,7 +246,7 @@ if (isset($_POST['adicionar'])) {
         adicionarGenero($id_filme, $genero);
     }
 
-    $dataQuebrada = explode("/", $data);
+    $dataQuebrada = explode("-", $data);
     $dataFormatada = $dataQuebrada[2] . '-' . $dataQuebrada[1] . '-' . $dataQuebrada[0];
 
     adicionarPremiacao($id_filme, $premiacao, $dataFormatada, $categoria);
@@ -268,7 +266,7 @@ if (isset($_POST['atualizar'])) {
     $duracao = $_POST['duracao'];
     $premiacao = $_POST['premiacao'];
     $categoria = $_POST['categoria'];
-    $data_premiacao = $_POST['data'];
+    $data_premiacao = $_POST['data_premiacao'];
     $id = $_POST['id'];
 
     if (isset($_FILES['poster']) && $_FILES['poster']['error'] == 0) {
@@ -293,7 +291,7 @@ if (isset($_POST['atualizar'])) {
     $resultado = $pdo->prepare($sql);
     $resultado->bindParam(':titulo', $titulo);
     $resultado->bindParam(':sinopse', $sinopse);
-    $resultado->bindParam(':estreia', $estreia);
+    $resultado->bindParam(':estreia', $estreiaFormatada);
     $resultado->bindParam(':classificacao', $classificacao);
     $resultado->bindParam(':duracao', $duracao);
     $resultado->bindParam(':posterCaminho', $foto);
@@ -301,51 +299,88 @@ if (isset($_POST['atualizar'])) {
 
     $resultado->execute();
 
-    // $sql = "update filmes_diretor SET nome = :diretor
-    // WHERE id_filme = :id;";
+    $sql = "update filmes_diretor SET nome = :diretor
+    WHERE id_filme = :id;";
 
-    // $resultado = $pdo->prepare($sql);
-    // $resultado->bindParam(':diretor', $diretor);
-    // $resultado->bindParam(':id', $id);
+    $resultado = $pdo->prepare($sql);
+    $resultado->bindParam(':diretor', $diretor);
+    $resultado->bindParam(':id', $id);
 
-    // $resultado->execute();
+    $resultado->execute();
 
-    // $atores = explode(", ", $elenco);
-    // foreach ($atores as $ator) {
-    //     $sql = "update filmes_elenco SET nome_ator = :ator
-    //     WHERE id_filme = :id;";
+    $idElenco = listarElenco($pdo, $id);
+    $atores = explode(", ", $elenco);
+    foreach ($idElenco as $idAtor) {
+        $atores[] = $idAtor['id'];
+    }
 
-    //     $resultado = $pdo->prepare($sql);
-    //     $resultado->bindParam(':ator', $ator);
-    //     $resultado->bindParam(':id', $id);
+    $atoresArr = [
+        [
+            "ator" => $atores[0],
+            "id" => $atores[2]
+        ],
+        [
+            "ator" => $atores[1],
+            "id" => $atores[3]
+        ]
+    ];
 
-    //     $resultado->execute();
-    // }
+    foreach ($atoresArr as $ator) {
+        $sql = "update filmes_elenco SET nome_ator = :ator
+        WHERE id = :idAtor;";
 
-    // $generosArr = explode(", ", $generos);
-    // foreach ($generosArr as $genero) {
-    //     $sql = "update filmes_genero SET genero = :genero
-    //     WHERE id_filme = :id;";
+        $resultado = $pdo->prepare($sql);
+        $resultado->bindParam(':ator', $ator['ator']);
+        $resultado->bindParam(':idAtor', $ator['id']);
 
-    //     $resultado = $pdo->prepare($sql);
-    //     $resultado->bindParam(':genero', $genero);
-    //     $resultado->bindParam(':id', $id);
+        $resultado->execute();
+    }
 
-    //     $resultado->execute();
-    // }
+    $idGeneros = listarGeneros($pdo, $titulo);
+    $generosArr = explode(", ", $generos);
+    foreach ($idGeneros as $idGenero) {
+        $generosArr[] = $idGenero['id'];
+    }
 
-    // $sql = "update filmes_premiacao SET nome = :premio, data_premiacao = :data_premiacao, categoria = :categoria
-    // WHERE id_filme = :id;";
+    $generosAssoc = [
+        [
+            "genero" => $generosArr[0],
+            "id" => $generosArr[2]
+        ],
+        [
+            "genero" => $generosArr[1],
+            "id" => $generosArr[3]
+        ]
+    ];
 
-    // $resultado = $pdo->prepare($sql);
-    // $resultado->bindParam(':premio', $premiacao);
-    // $resultado->bindParam(':data_premiacao', $data_premiacao);
-    // $resultado->bindParam(':categoria', $categoria);
-    // $resultado->bindParam(':id', $id);
+    foreach ($generosAssoc as $genero) {
+        $sql = "update filmes_genero SET genero = :genero
+        WHERE id = :idGenero;";
 
-    // $resultado->execute();
+        $resultado = $pdo->prepare($sql);
+        $resultado->bindParam(':genero', $genero['genero']);
+        $resultado->bindParam(':idGenero', $genero['id']);
 
-    // $enderecos = listarFilmes($pdo);
+        $resultado->execute();
+    }
+
+    $idPremiacao = listarPremiacao($pdo, $titulo);
+    foreach($idPremiacao as $idPremio){
+        $id_premio = $idPremio['id'];
+    }
+
+    $sql = "update filmes_premiacao SET nome = :premio, data_premiacao = :data_premiacao, categoria = :categoria
+WHERE id = :idPremiacao;";
+
+$resultado = $pdo->prepare($sql);
+$resultado->bindParam(':premio', $premiacao);
+$resultado->bindParam(':data_premiacao', $data_premiacao);
+$resultado->bindParam(':categoria', $categoria);
+$resultado->bindParam(':idPremiacao', $id_premio);
+
+$resultado->execute();
+
+$enderecos = listarFilmes($pdo);
 }
 
 ?>
@@ -441,13 +476,16 @@ if (isset($_POST['atualizar'])) {
                                 $elenco = $resultado->fetchAll(PDO::FETCH_ASSOC);
                                 $resultado->closeCursor();
 
-                                foreach ($elenco as $idx => $ator) {
+                                foreach ($elenco as $idx => $ator) { ?>
+                            <input type="hidden" name="idAtor" value="<?= $ator['id'] ?>">
+                        <?php
                                     if ($idx == count($elenco) - 1) {
                                         echo $ator['elenco'];
                                     } else {
                                         echo $ator['elenco'] . ", ";
                                     }
-                                } ?></h4>
+                                } ?>
+                    </h4>
                     <hr>
                     <p>Sinopse: <?= $filme['sinopse'] ?></p>
                     <hr>
@@ -487,12 +525,12 @@ if (isset($_POST['atualizar'])) {
                         <div>
                             <button class="button red" name="acao" value="excluir <?= $filme['id'] ?>">Excluir</button>
                             <button class="button blue" name="acao" value="editar <?= $filme['id'] ?>">Editar</button>
-                            <button class="button" name="acao" value="adicionar <?= $filme['id'] ?>">Adicionar</button>
                         </div>
                     <?php } ?>
                 </div>
             </article>
         </form>
+
         <div class="modal modalUpdate" data-id="<?= $filme['id'] ?>">
             <div class="modalContent">
                 <p>Editar</p>
@@ -500,6 +538,20 @@ if (isset($_POST['atualizar'])) {
                     <div>
                         <label for="titulo">Título: </label>
                         <input type="text" name="titulo" value="<?= $filme['titulo'] ?>">
+                    </div>
+                    <div>
+                        <label for="diretor">Diretor: </label>
+                        <input type="text" name="diretor" value="<?= $filme['diretor'] ?>">
+                    </div>
+                    <div>
+                        <label for="elenco">Elenco: </label>
+                        <input type="text" name="elenco" value="<?php foreach ($elenco as $idx => $ator) {
+                                                                    if ($idx == count($elenco) - 1) {
+                                                                        echo $ator['elenco'];
+                                                                    } else {
+                                                                        echo $ator['elenco'] . ", ";
+                                                                    }
+                                                                } ?>">
                     </div>
                     <div>
                         <label for="sinopse">Sinopse: </label>
@@ -518,6 +570,46 @@ if (isset($_POST['atualizar'])) {
                         <input type="text" name="duracao" value="<?= $filme['duracao'] ?>">
                     </div>
                     <div>
+                        <label for="generos">Gênero: </label>
+                        <input type="text" name="generos" value="<?php foreach ($generos as $idx => $genero) {
+                                                                        if ($idx == count($atores) - 1) {
+                                                                            echo $genero['genero'];
+                                                                        } else {
+                                                                            echo $genero['genero'] . ", ";
+                                                                        }
+                                                                    } ?>">
+                    </div>
+                    <div>
+                        <label for="premiacao">Premiação: </label>
+                        <input type="text" name="premiacao" value="<?php foreach ($premiacao as $idx => $premio) {
+                                                                        if ($idx == count($premiacao) - 1) {
+                                                                            echo $premio['nome'];
+                                                                        } else {
+                                                                            echo $premio['nome'] . ", ";
+                                                                        }
+                                                                    } ?>">
+                    </div>
+                    <div>
+                        <label for="data_premiacao">Data da premiação: </label>
+                        <input type="text" name="data_premiacao" value="<?php foreach ($premiacao as $idx => $premio) {
+                                                                            if ($idx == count($premiacao) - 1) {
+                                                                                echo $premio['data_premiacao'];
+                                                                            } else {
+                                                                                echo $premio['data_premiacao'] . ", ";
+                                                                            }
+                                                                        } ?>">
+                    </div>
+                    <div>
+                        <label for="categoria">Categoria: </label>
+                        <input type="text" name="categoria" value="<?php foreach ($premiacao as $idx => $premio) {
+                                                                        if ($idx == count($premiacao) - 1) {
+                                                                            echo $premio['categoria'];
+                                                                        } else {
+                                                                            echo $premio['categoria'] . ", ";
+                                                                        }
+                                                                    } ?>">
+                    </div>
+                    <div>
                         <label for="poster">Poster do filme (2:3): </label>
                         <input type="file" name="poster" value="<?= $foto ?>">
                         <input type="hidden" name="id" value="<?= $filme['id'] ?>">
@@ -526,16 +618,6 @@ if (isset($_POST['atualizar'])) {
                 </form>
             </div>
         </div>
-
-        <div class="modal modalOptions" data-id="<?= $filme['id'] ?>">
-        <div class="modalContent">
-            <p>Opções</p>
-            <button class="button" name="diretor">Diretor</button>
-            <button class="button" name="ator">Ator</button>
-            <button class="button" name="genero">Gênero</button>
-            <button class="button" name="premio">Prêmio</button>
-        </div>
-    </div>
     <?php } ?>
 </main>
 
@@ -546,6 +628,14 @@ if (isset($_POST['atualizar'])) {
             <div>
                 <label for="titulo">Título: </label>
                 <input type="text" name="titulo" placeholder="Digite o título (texto)">
+            </div>
+            <div>
+                <label for="diretor">Diretor: </label>
+                <input type="text" name="diretor" placeholder="Digite o diretor (texto)">
+            </div>
+            <div>
+                <label for="elenco">Elenco: </label>
+                <input type="text" name="elenco" placeholder="Digite o elenco (texto)">
             </div>
             <div>
                 <label for="sinopse">Sinopse: </label>
@@ -562,6 +652,22 @@ if (isset($_POST['atualizar'])) {
             <div>
                 <label for="duracao">Duração: </label>
                 <input type="text" name="duracao" placeholder="(em minutos)">
+            </div>
+            <div>
+                <label for="generos">Gêneros: </label>
+                <input type="text" name="generos" placeholder="Digite o generos (texto)">
+            </div>
+            <div>
+                <label for="premiacao">Premiação: </label>
+                <input type="text" name="premiacao" placeholder="Digite o premiacao (texto)">
+            </div>
+            <div>
+                <label for="data_premiacao">Data da premiação: </label>
+                <input type="text" name="data_premiacao" placeholder="Digite o data_premiacao (texto)">
+            </div>
+            <div>
+                <label for="categoria">Categoria da premiação: </label>
+                <input type="text" name="categoria" placeholder="Digite o categoria (texto)">
             </div>
             <div>
                 <label for="poster">Poster do filme (2:3): </label>
