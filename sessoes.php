@@ -29,6 +29,33 @@ $resultado->closeCursor();
     return $sessoes;
 }
 
+function adicionarSessao($sala, $filme, $data, $hora, $idioma){
+    $pdo = getPDO();
+    $sql = "call idSala($sala);";
+
+    $resultado = $pdo->query($sql);
+    $id_sala = $resultado->fetch(PDO::FETCH_ASSOC);
+    $resultado->closeCursor();
+
+    $sql = "call idFilme('$filme');";
+
+    $resultado = $pdo->query($sql);
+    $id_filme = $resultado->fetch(PDO::FETCH_ASSOC);
+    $resultado->closeCursor();
+
+    $sql = "insert into sessoes (id_sala, id_filme, data_sessao, hora, idioma) values
+    (:id_sala, :id_filme, :data, :hora, :idioma);";
+
+    $resultado = $pdo->prepare($sql);
+    $resultado->bindParam(':id_sala', $id_sala['id']);
+    $resultado->bindParam(':id_filme', $id_filme['id']);
+    $resultado->bindParam(':data', $data);
+    $resultado->bindParam(':hora', $hora);
+    $resultado->bindParam(':idioma', $idioma);
+
+    $resultado->execute();
+}
+
 if (isset($_POST['filtrar'])) {
     $data = $_REQUEST['data'] ?? date("Y-m-d");
     if ($data != "") {
@@ -86,6 +113,39 @@ if (isset($_POST['acao'])){
 
     $resultado->execute();
     $sessoes = listarSessoes($pdo);
+}
+
+if (isset($_POST['adicionar'])) {
+    $sala = $_POST['sala'];
+    $filme = $_POST['filme'];
+    $data_sessao = $_POST['data'];
+    $hora = $_POST['hora'];
+    $idioma = $_POST['idioma'];
+
+    adicionarSessao($sala, $filme, $data_sessao, $hora, $idioma);
+    $sessoes = listarSessoes($pdo);
+}
+
+if (isset($_POST['atualizar'])) {
+    $pdo = getPDO();
+    $sala = $_POST['sala'];
+    $preco = $_POST['preco'];
+    $capacidade = $_POST['capacidade'];
+    $descricao = $_POST['descricao'];
+    $id = $_POST['id'];
+
+    $sql = "update Tipo_sala SET tipo = :tipo, preco = :preco, capacidade = :capacidade, descricao = :descricao
+    WHERE id = :id";
+
+    $resultado = $pdo->prepare($sql);
+    $resultado->bindParam(':tipo', $tipo);
+    $resultado->bindParam(':preco', $preco);
+    $resultado->bindParam(':capacidade', $capacidade);
+    $resultado->bindParam(':descricao', $descricao);
+    $resultado->bindParam(':id', $id);
+
+    $resultado->execute();
+    $salas = listarSalas($pdo);
 }
 
 ?>
@@ -155,15 +215,15 @@ if (isset($_POST['acao'])){
                 <button class="button" name="filtrar" value="pesquisar">Filtrar</button>
             </form>
             <p class="sessoes"><?php
-                                if (isset($data)) {
-                                    if ($data != "") {
-                                        echo "Sessões do dia: " . $dataFormatada;
-                                    } else {
-                                        echo "Todas as sessões";
-                                    }
-                                } else {
-                                    echo "Todas as sessões";
-                                } ?></p>
+            if (isset($data)) {
+                if ($data != "") {
+                    echo "Sessões do dia: " . $dataFormatada;
+                } else {
+                    echo "Todas as sessões";
+                }
+            } else {
+                echo "Todas as sessões";
+            } ?></p>
         </section>
 
         <?php if (estaAutenticado()) { ?>
@@ -192,16 +252,16 @@ if (isset($_POST['acao'])){
                     <tr>
                     <form action="" method="post">
                         <td>
-                            <input class="inputEditable" type="text" value="<?= $sessao['sala'] ?>" <?php estaAutenticado() == true ? $mensagem = "" : $mensagem = 'disabled'; echo $mensagem; ?>>
+                            <input class="inputEditable" name="sala" type="text" value="<?= $sessao['sala'] ?>" <?php estaAutenticado() == true ? $mensagem = "" : $mensagem = 'disabled'; echo $mensagem; ?>>
                         </td>
                         <td>
-                            <input class="inputEditable" type="text" value="<?= $tituloFilme ?>" <?php estaAutenticado() == true ? $mensagem = "" : $mensagem = 'disabled'; echo $mensagem; ?>>
+                            <input class="inputEditable" name="filme" type="text" value="<?= $tituloFilme ?>" <?php estaAutenticado() == true ? $mensagem = "" : $mensagem = 'disabled'; echo $mensagem; ?>>
                         </td>
                         <td>
-                            <input class="inputEditable" type="text" value="<?= $sessao['hora'] ?>" <?php estaAutenticado() == true ? $mensagem = "" : $mensagem = 'disabled'; echo $mensagem; ?>>
+                            <input class="inputEditable" name="hora" type="text" value="<?= $sessao['hora'] ?>" <?php estaAutenticado() == true ? $mensagem = "" : $mensagem = 'disabled'; echo $mensagem; ?>>
                         </td>
                         <td>
-                            <input class="inputEditable" type="text" value="<?= $sessao['idioma'] ?>" <?php estaAutenticado() == true ? $mensagem = "" : $mensagem = 'disabled'; echo $mensagem; ?>>
+                            <input class="inputEditable" name="" type="text" value="<?= $sessao['idioma'] ?>" <?php estaAutenticado() == true ? $mensagem = "" : $mensagem = 'disabled'; echo $mensagem; ?>>
                         </td>
                         <td>
                             <input class="inputEditable" type="text" value="<?php
@@ -233,6 +293,35 @@ if (isset($_POST['acao'])){
             </tbody>
         </table>
     </main>
+
+    <div class="modal modalCreate">
+        <div class="modalContent">
+            <p>Adicionar</p>
+            <form action="" method="post">
+                <div>
+                    <label for="sala">Sala: </label>
+                    <input type="text" name="sala" placeholder="Digite a sala (int)">
+                </div>
+                <div>
+                    <label for="filme">Filme: </label>
+                    <input type="text" name="filme" placeholder="Digite o filme (texto)">
+                </div>
+                <div>
+                    <label for="data">Data: </label>
+                    <input type="text" name="data" placeholder="Digite a data (aaaa-mm-dd)">
+                </div>
+                <div>
+                    <label for="hora">Hora: </label>
+                    <input type="text" name="hora" placeholder="Digite a hora (hh:mm:ss)">
+                </div>
+                <div>
+                    <label for="idioma">Idioma: </label>
+                    <input type="text" name="idioma" placeholder="(Dublado, Legendado)">
+                </div>
+                <button class="button" name="adicionar" value="adicionar">Adicionar</button>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>

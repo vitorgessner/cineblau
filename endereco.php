@@ -103,6 +103,30 @@ if (isset($_POST['adicionar'])){
     $enderecos = listarEndereco($pdo, $cidadeURL);
 }
 
+if (isset($_POST['atualizar'])) {
+    $pdo = getPDO();
+    $bairro = $_POST['bairro'];
+    $logradouro = $_POST['logradouro'];
+    $numero = $_POST['numero'];
+    $complemento = $_POST['complemento'];
+    $cep = $_POST['cep'];
+    $id = $_POST['id'];
+
+    $sql = "update cinema_endereco SET bairro = :bairro, logradouro = :logradouro, numero = :numero, complemento = :complemento, cep = :cep
+    WHERE id = :id";
+
+    $resultado = $pdo->prepare($sql);
+    $resultado->bindParam(':bairro', $bairro);
+    $resultado->bindParam(':logradouro', $logradouro);
+    $resultado->bindParam(':numero', $numero);
+    $resultado->bindParam(':complemento', $complemento);
+    $resultado->bindParam(':cep', $cep);
+    $resultado->bindParam(':id', $id);
+
+    $resultado->execute();
+    $enderecos = listarEndereco($pdo, $cidadeURL);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -163,7 +187,7 @@ if (isset($_POST['adicionar'])){
     </aside>
 
     <?php if (estaAutenticado()) { ?>
-    <div class="center"><button class="button" name="acao" value="adicionar">Adicionar sala</button></div>
+    <div class="center"><button class="button" name="acao" value="adicionar">Adicionar Endereço</button></div>
 <?php } ?>
 
     <main>
@@ -185,10 +209,39 @@ if (isset($_POST['adicionar'])){
             </ul>
             </form>
         </section>
+        <div class="modal modalUpdate" data-id="<?= $endereco['id'] ?>">
+            <div class="modalContent">
+                <p>Editar</p>
+                <form action="" method="post">
+                    <div>
+                        <label for="bairro">Bairro: </label>
+                        <input type="text" name="bairro" value="<?= $endereco['bairro'] ?>">
+                    </div>
+                    <div>
+                        <label for="logradouro">Logradouro: </label>
+                        <input type="text" name="logradouro" value="<?= $endereco['logradouro'] ?>">
+                    </div>
+                    <div>
+                        <label for="numero">Número: </label>
+                        <input type="text" name="numero" value="<?= $endereco['numero'] ?>">
+                    </div>
+                    <div>
+                        <label for="complemento">Complemento: </label>
+                        <input type="text" name="complemento" value="<?= $endereco['complemento'] ?>">
+                    </div>
+                    <div>
+                        <label for="cep">CEP: </label>
+                        <input type="text" name="cep" value="<?= $endereco['cep'] ?>">
+                        <input type="hidden" name="id" value="<?=$endereco['id']?>">
+                    </div>
+                    <button class="button blue" name="atualizar">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
         <?php }?>
     </main>
 
-    <div class="modal">
+    <div class="modal modalCreate">
         <div class="modalContent">
             <p>Adicionar</p>
             <form action="" method="post">

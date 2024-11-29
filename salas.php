@@ -61,6 +61,7 @@ if (isset($_POST['logoff'])) {
 }
 
 if (isset($_POST['acao'])) {
+    var_dump($_POST['acao']);
     $pattern = "/^excluir/m";
     if (preg_match($pattern, $_POST['acao'])) {
         $separado = explode(" ", $_POST['acao']);
@@ -75,8 +76,29 @@ if (isset($_POST['acao'])) {
         $resultado->execute();
         $salas = listarSalas($pdo);
     } else {
-        var_dump($_POST['acao']);
     }
+}
+
+if (isset($_POST['atualizar'])) {
+    $pdo = getPDO();
+    $tipo = $_POST['tipo'];
+    $preco = $_POST['preco'];
+    $capacidade = $_POST['capacidade'];
+    $descricao = $_POST['descricao'];
+    $id = $_POST['id'];
+
+    $sql = "update Tipo_sala SET tipo = :tipo, preco = :preco, capacidade = :capacidade, descricao = :descricao
+    WHERE id = :id";
+
+    $resultado = $pdo->prepare($sql);
+    $resultado->bindParam(':tipo', $tipo);
+    $resultado->bindParam(':preco', $preco);
+    $resultado->bindParam(':capacidade', $capacidade);
+    $resultado->bindParam(':descricao', $descricao);
+    $resultado->bindParam(':id', $id);
+
+    $resultado->execute();
+    $salas = listarSalas($pdo);
 }
 
 if (isset($_GET['search']) && isset($_GET['cidade'])) {
@@ -181,10 +203,35 @@ if (isset($_POST['adicionar'])) {
                 </div>
             </form>
         </article>
+        <div class="modal modalUpdate" data-id="<?= $sala['id'] ?>">
+            <div class="modalContent">
+                <p>Editar</p>
+                <form action="" method="post">
+                    <div>
+                        <label for="tipo">Tipo: </label>
+                        <input type="text" name="tipo" value="<?= $sala['tipo'] ?>">
+                    </div>
+                    <div>
+                        <label for="preco">Preço: </label>
+                        <input type="text" name="preco" value="<?= $sala['preco'] ?>">
+                    </div>
+                    <div>
+                        <label for="capacidade">Capacidade: </label>
+                        <input type="text" name="capacidade" value="<?= $sala['capacidade'] ?>">
+                    </div>
+                    <div>
+                        <label for="descricao">Descrição: </label>
+                        <input type="text" name="descricao" value="<?= $sala['descricao'] ?>">
+                        <input type="hidden" name="id" value="<?=$sala['id']?>">
+                    </div>
+                    <button class="button blue" name="atualizar">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
     <?php } ?>
     </div>
 
-    <div class="modal">
+    <div class="modal modalCreate">
         <div class="modalContent">
             <p>Adicionar</p>
             <form action="" method="post">
