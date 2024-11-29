@@ -30,6 +30,7 @@ body {
 
 a {
     text-decoration: none;
+    color: white;
 }
 
 .main_header, .main_header div, .main_header .identidade {
@@ -99,6 +100,11 @@ a {
     font-size: 1.1rem;
     padding: .5rem 1.5rem;
     border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: var(--green-hover);
 }
 
 .login:hover,
@@ -157,11 +163,14 @@ a {
 .card {
     display: flex;
     flex-direction: column;
+    position: relative;
+    /* background-color: white; */
+}
+
+.cardInfo {
     transition: transform .5s ease-in-out,
     opacity .5s ease-in-out,
     background-color .5s ease-in-out;
-    position: relative;
-    /* background-color: white; */
 }
 
 .card .img_card img {
@@ -170,21 +179,21 @@ a {
     height: 435px;
 }
 
-.card .img_card img:hover, 
-.card:has(.teste:hover) .img_card img {
+.cardInfo .img_card img:hover, 
+.cardInfo:has(.teste:hover) .img_card img {
     opacity: 60%;
     cursor: pointer;
 }
 
-.card .img_card:hover .teste {
+.cardInfo .img_card:hover .teste {
     opacity: 100%;
 }
 
-.card:hover {
+.cardInfo:hover {
     background-color: white;
 }
 
-.card .a_card {
+.cardInfo .a_card {
     display: block;
     background-color: var(--secondary-color);
     color: white;
@@ -246,7 +255,7 @@ a {
 
 .tabela, td, th {
     border: 2px solid var(--primary-color);
-    background-color: var(--light-secondary-color);
+    background-color: var(--secondary-color);
     border-collapse: collapse;
     padding: .5rem 1rem .5rem 1rem;
     color: white;
@@ -254,29 +263,45 @@ a {
     /* background-color: white; */
 }
 
-.tabela tbody tr:nth-child(odd) td {
+.tabela .inputEditable {
+    background-color: var(--light-primary-color);
+    border: none;
+    color: white;
+    text-align: left;
+    font-size: 1rem;
+    width: fit-content;
+}
+
+.tabela tbody tr:nth-child(odd) .inputEditable {
+    background-color: var(--secondary-color);
+}
+
+.tabela tbody tr:nth-child(even) td {
     background-color: var(--light-primary-color);
 }
 
 .tabela tbody tr:hover td {
-    background-color: var(--green);
+    background-color: var(--light-secondary-color);
     cursor: pointer;
 }
 
-.tabela tbody tr td:last-of-type,
+.tabela tbody tr td:nth-of-type(6),
 .tabela tbody tr td:first-of-type{
     text-align: center;
 }
 
 .classificacao {
-    background-color: black;
-    padding: .3rem;
+    /* background-color: black; */
+    padding: .2rem ;
     font-weight: bold;
+    /* width: 2rem; */
+    text-align: center;
+    color: white;
+    border: none;
 }
 
 .l {
     background-color: forestgreen;
-    padding: .3rem .57rem;
 }
 
 .dez {
@@ -305,7 +330,7 @@ a {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    column-gap: 21rem;
+    column-gap: 1rem;
     color: white;
     max-width: fit-content;
 }
@@ -345,8 +370,8 @@ hr {
     gap: 1rem;
     margin: 2rem auto;
     padding: 1rem;
-    max-width: fit-content;
-    justify-content: center;
+    max-width: 51.125rem;
+    justify-content: left;
 }
 
 .poster img {
@@ -408,6 +433,11 @@ hr {
     text-align: center;
 }
 
+.listaCidades li {
+    display: flex;
+    align-items: center;
+}
+
 .listaCidades a {
     color: white;
     display: block;
@@ -431,8 +461,73 @@ hr {
     text-align: center;
 }
 
-@media (min-width: 105em) {
-    .salas {
-        column-gap: 25rem;
-    }
+.adm {
+    color: white;
+}
+
+.colaboradores {
+    display: block;
+    background-color: var(--secondary-color);
+    padding: .6rem 1rem;
+}
+
+.colaboradores:hover {
+    background-color: var(--light-secondary-color);
+}
+
+.red {
+    background-color: rgb(255, 34, 0);
+}
+
+.red:hover {
+    background-color: hsl(8, 100%, 70%);
+}
+
+.blue {
+    background-color: hsl(195, 53%, 69%);
+}
+
+.blue:hover {
+    background-color: hsl(195, 53%, 79%);
+}
+
+.center {
+    text-align: center;
+    margin: 1rem auto 0;
+}
+
+/*  ----------------------------------------------------------------- */
+
+.modal {
+    position: absolute;
+    /* width: 100vw; */
+    /* height: 100vh; */
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    color: white;
+    overflow: hidden;
+}
+
+.modalContent {
+    background-color: #2b333c;
+    padding: 1rem;
+}
+
+.modalContent form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modalContent p {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 0 0 1rem;
 }

@@ -4,17 +4,19 @@
     $pdo = getPDO();
 
     if ($_POST){
+        $caminho = $_POST['caminho'];
         $titulo = $_POST['titulo'];
         $sinopse = $_POST['sinopse'];
         $estreia = $_POST['estreia'];
         $classificacao = $_POST['classificacao'];
         $duracao = $_POST['duracao'];
 
-        $sql = "insert into Filmes (titulo, sinopse, estreia, classificacao, duracao)
-        values (:titulo, :sinopse, :estreia, :classificacao, :duracao)";
+        $sql = "insert into Filmes (posterCaminho, titulo, sinopse, estreia, classificacao, duracao)
+        values (:caminho, :titulo, :sinopse, :estreia, :classificacao, :duracao)";
 
         $resultado = $pdo->prepare($sql);
 
+        $resultado->bindParam(':caminho', $caminho);
         $resultado->bindParam(':titulo', $titulo);
         $resultado->bindParam(':sinopse', $sinopse);
         $resultado->bindParam(':estreia', $estreia);
@@ -46,6 +48,7 @@
 </head>
 <body>
     <form action="" method="post">
+        <input type="text" name="caminho">
         <input type="text" name="titulo">
         <input type="text" name="sinopse">
         <input type="text" name="estreia" placeholder="aaaa-mm-dd">

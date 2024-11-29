@@ -1,26 +1,45 @@
 let classificacoes = document.querySelectorAll(".classificacao");
-for (classificacao of classificacoes){
-    if (classificacao.textContent == "L"){
+for (classificacao of classificacoes) {
+    classificacao.addEventListener('input', resizeInput);
+    resizeInput.call(classificacao);
+
+    if (classificacao.value == "L") {
         classificacao.classList.add("l");
     }
 
-    if (classificacao.textContent == '10'){
+    if (classificacao.value == '10') {
         classificacao.classList.add("dez")
     }
 
-    if (classificacao.textContent == '12'){
+    if (classificacao.value == '12') {
         classificacao.classList.add("doze")
     }
 
-    if (classificacao.textContent == '14'){
+    if (classificacao.value == '14') {
         classificacao.classList.add("catorze")
     }
 
-    if (classificacao.textContent == '16'){
+    if (classificacao.value == '16') {
         classificacao.classList.add("dezesseis")
     }
 
-    if (classificacao.textContent == '18'){
+    if (classificacao.value == '18') {
         classificacao.classList.add("dezoito")
+    }
+}
+
+let inputs = document.querySelectorAll('.inputEditable');
+for (input of inputs) {
+    input.addEventListener('input', resizeInput);
+    resizeInput.call(input);
+}
+
+
+
+function resizeInput() {
+    this.style.width = this.value.length + 1 + "ch";
+
+    if (this.value == 'L'){
+        this.style.width = this.value.length + 2 + "ch";
     }
 }
