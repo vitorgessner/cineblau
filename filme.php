@@ -164,17 +164,23 @@ if (isset($_POST['logoff'])) {
 }
 
 if (isset($_POST['acao'])) {
-    $separado = explode(" ", $_POST['acao']);
-    $id = end($separado);
+    if (preg_match("/^excluir/", $_POST['acao'])) {
+        $separado = explode(" ", $_POST['acao']);
+        $id = end($separado);
 
-    $sql = "delete from Filmes
-    WHERE id = :id";
+        $sql = "delete from Filmes
+        WHERE id = :id";
 
-    $resultado = $pdo->prepare($sql);
-    $resultado->bindParam(':id', $id);
+        $resultado = $pdo->prepare($sql);
+        $resultado->bindParam(':id', $id);
 
-    $resultado->execute();
-    header("location: filme.php?cidade='$cidadeURL'");
+        $resultado->execute();
+        header("location: filme.php?cidade='$cidadeURL'");
+    } else if (preg_match("/^editar/", $_POST['acao'])){
+        var_dump($_POST);
+    } else {
+        var_dump($_POST);
+    }
 }
 
 if (isset($_GET['filme'])) {
@@ -473,13 +479,15 @@ if (isset($_POST['atualizar'])) {
                     $resultado->closeCursor();
 
                     foreach ($premios as $idx => $premio) {
-                        echo '<p>Premiações: ' . $premio['nome'] . ', ' . $premio['categoria'] . ', ' . $premio['data_premiacao'] . "</p>";
+                        echo '<p>Premiações: ' . $premio['nome'] . ', ' . $premio['categoria'] . ', ' . $premio['data_premiacao'] . " </p>";
                     }
-                    ?>
-                    <?php if (estaAutenticado()) { ?>
+
+
+                    ?> <?php if (estaAutenticado()) { ?>
                         <div>
                             <button class="button red" name="acao" value="excluir <?= $filme['id'] ?>">Excluir</button>
                             <button class="button blue" name="acao" value="editar <?= $filme['id'] ?>">Editar</button>
+                            <button class="button" name="acao" value="adicionar <?= $filme['id'] ?>">Adicionar</button>
                         </div>
                     <?php } ?>
                 </div>
@@ -518,6 +526,16 @@ if (isset($_POST['atualizar'])) {
                 </form>
             </div>
         </div>
+
+        <div class="modal modalOptions" data-id="<?= $filme['id'] ?>">
+        <div class="modalContent">
+            <p>Opções</p>
+            <button class="button" name="diretor">Diretor</button>
+            <button class="button" name="ator">Ator</button>
+            <button class="button" name="genero">Gênero</button>
+            <button class="button" name="premio">Prêmio</button>
+        </div>
+    </div>
     <?php } ?>
 </main>
 
