@@ -41,6 +41,20 @@ function adicionarCidade($nome, $estado)
     $resultado->execute();
 }
 
+function atualizarCidade($id, $nome, $estado){
+    $pdo = getPDO();
+
+    $sql = "update cidades SET nome = :nome, estado = :estado
+    WHERE id = :id;";
+
+    $resultado = $pdo->prepare($sql);
+    $resultado->bindParam(':nome', $nome);
+    $resultado->bindParam(':estado', $estado);
+    $resultado->bindParam(':id', $id, PDO::PARAM_INT);
+
+    $resultado->execute();
+}
+
 if (isset($_REQUEST['login']) && isset($_REQUEST['password'])) {
     $login = $_REQUEST['login'];
     $senha = $_REQUEST['password'];
@@ -77,6 +91,15 @@ if (isset($_POST['adicionar'])) {
     $estado = $_POST['estado'];
 
     adicionarCidade($nome, $estado);
+    $cidades = listarCidades($pdo);
+}
+
+if (isset($_POST['atualizar'])){
+    $nome = $_POST['nome'];
+    $estado = $_POST['estado'];
+    $id = $_POST['id'];
+
+    atualizarCidade($id, $nome, $estado);
     $cidades = listarCidades($pdo);
 }
 
@@ -117,7 +140,7 @@ if (isset($_POST['adicionar'])) {
 
     </header>
 <?php } else { ?>
-    <a href="colaboradores.php" class="colaboradores">Colaboradores</a>
+    <a href="colaboradores.php?cidade=<?=$cidadeURL?>" class="colaboradores">Colaboradores</a>
     <p class="adm">Olá! <?= $adm['nome'] ?></p>
 
     <form action="" method="post">
@@ -156,6 +179,24 @@ if (isset($_POST['adicionar'])) {
                     <?php } ?>
             </li>
                 </form>
+
+                <div class="modal modalUpdate" data-id="<?= $cidade['id'] ?>">
+            <div class="modalContent">
+                <p>Editar</p>
+                <form action="" method="post">
+                    <div>
+                        <label for="nome">Nome: </label>
+                        <input type="text" name="nome" value="<?= $cidade['nome'] ?>">
+                    </div>
+                    <div>
+                        <label for="estado">Estado: </label>
+                        <input type="text" name="estado" value="<?= $cidade['estado'] ?>">
+                        <input type="hidden" name="id" value="<?=$cidade['id']?>">
+                </div>
+                    <button class="button blue" name="atualizar">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
             <?php } ?>
         </ul>
     </section>
@@ -165,7 +206,7 @@ if (isset($_POST['adicionar'])) {
     <?php } ?>
 </main>
 
-<div class="modal">
+<div class="modal modalCreate">
     <div class="modalContent">
         <p>Adicionar</p>
         <form action="" method="post">

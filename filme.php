@@ -215,7 +215,7 @@ if (isset($_POST['adicionar'])) {
     $data = $_POST['data_premiacao'];
 
     if (isset($_FILES['poster']) && $_FILES['poster']['error'] == 0) {
-        $nome_original = $_FILES['poster']['name'];
+        @$nome_original = $_FILES['poster']['name'];
 
 
         $temp = explode(".", $nome_original);
@@ -227,29 +227,37 @@ if (isset($_POST['adicionar'])) {
         }
     }
 
-    $estreiaQuebrada = explode("/", $estreia);
-    $estreiaFormatada = $estreiaQuebrada[2] . '-' . $estreiaQuebrada[1] . '-' . $estreiaQuebrada[0];
+    @$estreiaQuebrada = explode("/", $estreia);
+    @$estreiaFormatada = $estreiaQuebrada[2] . '-' . $estreiaQuebrada[1] . '-' . $estreiaQuebrada[0];
 
     adicionarFilme($titulo, $sinopse, $estreiaFormatada, $classificacao, $duracao, $foto);
 
     $id_filme = idFilme($pdo, $titulo);
 
-    adicionarDiretor($id_filme, $diretor);
-
-    $atores = explode(", ", $elenco);
-    foreach ($atores as $ator) {
-        adicionarElenco($id_filme, $ator);
+    if ($diretor != ""){
+        adicionarDiretor($id_filme, $diretor);
     }
 
-    $generosArr = explode(", ", $generos);
-    foreach ($generosArr as $genero) {
-        adicionarGenero($id_filme, $genero);
+    if ($elenco != ""){
+        $atores = explode(", ", $elenco);
+        foreach ($atores as $ator) {
+            adicionarElenco($id_filme, $ator);
+        }
     }
 
-    $dataQuebrada = explode("-", $data);
-    $dataFormatada = $dataQuebrada[2] . '-' . $dataQuebrada[1] . '-' . $dataQuebrada[0];
+    if ($generos != ""){
+        $generosArr = explode(", ", $generos);
+        foreach ($generosArr as $genero) {
+            adicionarGenero($id_filme, $genero);
+        }
+    }
 
-    adicionarPremiacao($id_filme, $premiacao, $dataFormatada, $categoria);
+    if ($data !== "") {
+        $dataQuebrada = explode("-", $data);
+        $dataFormatada = $dataQuebrada[2] . '-' . $dataQuebrada[1] . '-' . $dataQuebrada[0];
+        adicionarPremiacao($id_filme, $premiacao, $dataFormatada ?? null, $categoria);
+    }
+
 
     $filmes = listarFilmes($pdo);
 }
@@ -282,8 +290,8 @@ if (isset($_POST['atualizar'])) {
         }
     }
 
-    $estreiaQuebrada = explode("-", $estreia);
-    $estreiaFormatada = $estreiaQuebrada[2] . '-' . $estreiaQuebrada[1] . '-' . $estreiaQuebrada[0];
+    @$estreiaQuebrada = explode("-", $estreia);
+    @$estreiaFormatada = $estreiaQuebrada[2] . '-' . $estreiaQuebrada[1] . '-' . $estreiaQuebrada[0];
 
     $sql = "update filmes SET titulo = :titulo, sinopse = :sinopse, estreia = :estreia, classificacao = :classificacao, duracao = :duracao, posterCaminho = :posterCaminho
     WHERE id = :id";
@@ -291,7 +299,7 @@ if (isset($_POST['atualizar'])) {
     $resultado = $pdo->prepare($sql);
     $resultado->bindParam(':titulo', $titulo);
     $resultado->bindParam(':sinopse', $sinopse);
-    $resultado->bindParam(':estreia', $estreiaFormatada);
+    $resultado->bindParam(':estreia', $estreia);
     $resultado->bindParam(':classificacao', $classificacao);
     $resultado->bindParam(':duracao', $duracao);
     $resultado->bindParam(':posterCaminho', $foto);
@@ -299,16 +307,24 @@ if (isset($_POST['atualizar'])) {
 
     $resultado->execute();
 
-    $sql = "update filmes_diretor SET nome = :diretor
-    WHERE id_filme = :id;";
+    $filmes = listarFilmes($pdo);
 
-    $resultado = $pdo->prepare($sql);
-    $resultado->bindParam(':diretor', $diretor);
-    $resultado->bindParam(':id', $id);
+    if ($diretor != ""){
+        $sql = "update filmes_diretor SET nome = :diretor
+        WHERE id_filme = :id;";
 
-    $resultado->execute();
+        $resultado = $pdo->prepare($sql);
+        $resultado->bindParam(':diretor', $diretor);
+        $resultado->bindParam(':id', $id);
 
-    $idElenco = listarElenco($pdo, $id);
+        $resultado->execute();
+
+        $filmes = listarFilmes($pdo);
+
+    }
+
+    if ($elenco != ""){
+        $idElenco = listarElenco($pdo, $id);
     $atores = explode(", ", $elenco);
     foreach ($idElenco as $idAtor) {
         $atores[] = $idAtor['id'];
@@ -334,9 +350,12 @@ if (isset($_POST['atualizar'])) {
         $resultado->bindParam(':idAtor', $ator['id']);
 
         $resultado->execute();
+        $elenco = listarElenco($pdo, $id);
+    }
     }
 
-    $idGeneros = listarGeneros($pdo, $titulo);
+    if ($generos != ""){
+        $idGeneros = listarGeneros($pdo, $titulo);
     $generosArr = explode(", ", $generos);
     foreach ($idGeneros as $idGenero) {
         $generosArr[] = $idGenero['id'];
@@ -363,24 +382,27 @@ if (isset($_POST['atualizar'])) {
 
         $resultado->execute();
     }
+    }
 
-    $idPremiacao = listarPremiacao($pdo, $titulo);
-    foreach($idPremiacao as $idPremio){
+    if ($data_premiacao != "") {
+        $idPremiacao = listarPremiacao($pdo, $titulo);
+    foreach ($idPremiacao as $idPremio) {
         $id_premio = $idPremio['id'];
     }
 
-    $sql = "update filmes_premiacao SET nome = :premio, data_premiacao = :data_premiacao, categoria = :categoria
-WHERE id = :idPremiacao;";
+        $sql = "update filmes_premiacao SET nome = :premio, data_premiacao = :data_premiacao, categoria = :categoria
+    WHERE id = :idPremiacao;";
 
-$resultado = $pdo->prepare($sql);
-$resultado->bindParam(':premio', $premiacao);
-$resultado->bindParam(':data_premiacao', $data_premiacao);
-$resultado->bindParam(':categoria', $categoria);
-$resultado->bindParam(':idPremiacao', $id_premio);
+        $resultado = $pdo->prepare($sql);
+        $resultado->bindParam(':premio', $premiacao);
+        $resultado->bindParam(':data_premiacao', $data_premiacao);
+        $resultado->bindParam(':categoria', $categoria);
+        $resultado->bindParam(':idPremiacao', $id_premio);
 
-$resultado->execute();
+        $resultado->execute();
+    }
 
-$enderecos = listarFilmes($pdo);
+    $enderecos = listarFilmes($pdo);
 }
 
 ?>
@@ -420,7 +442,7 @@ $enderecos = listarFilmes($pdo);
 
     </header>
 <?php } else { ?>
-    <a href="colaboradores.php" class="colaboradores">Colaboradores</a>
+    <a href="colaboradores.php?cidade=<?=$cidadeURL?>" class="colaboradores">Colaboradores</a>
     <p class="adm">Olá! <?= $adm['nome'] ?></p>
 
     <form action="" method="post">

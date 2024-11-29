@@ -302,6 +302,7 @@ a {
 
 .l {
     background-color: forestgreen;
+    padding: .2rem .4rem;
 }
 
 .dez {
@@ -374,12 +375,14 @@ hr {
     justify-content: left;
 }
 
+
 .poster img {
     width: 15rem;
 }
 
 .info_breve {
     color: white;
+    width: 100%;
 }
 
 .card_breve h2,
@@ -397,6 +400,11 @@ hr {
 .card_breve p {
     max-width: 30rem;
     text-align: justify;
+}
+
+.card_colaborador h2,
+.card_colaborador p{
+    max-width: initial;
 }
 
 /* ---------------------------------------------------------- */
@@ -512,6 +520,11 @@ hr {
     color: white;
     overflow: hidden;
     z-index: 1;
+}
+
+ul .modal {
+    position: absolute;
+    left: 0;
 }
 
 .modalContent {

@@ -158,7 +158,7 @@ if (isset($_POST['adicionar'])) {
 
     </header>
 <?php } else { ?>
-    <a href="colaboradores.php" class="colaboradores">Colaboradores</a>
+    <a href="colaboradores.php?cidade=<?=$cidadeURL?>" class="colaboradores">Colaboradores</a>
     <p class="adm">Olá! <?= $adm['nome'] ?></p>
 
     <form action="" method="post">
