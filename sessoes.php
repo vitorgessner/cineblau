@@ -256,6 +256,7 @@ if (isset($_POST['atualizar'])) {
         <thead>
             <tr>
                 <th>Sala</th>
+                <th>Tipo</th>
                 <th>Filme</th>
                 <th>Horário</th>
                 <th>Áudio</th>
@@ -275,6 +276,9 @@ if (isset($_POST['atualizar'])) {
                     <form action="" method="post">
                         <td>
                             <?= $sessao['sala'] ?>
+                        </td>
+                        <td>
+                            <?= $sessao['tipo']?>
                         </td>
                         <td>
                             <?= $tituloFilme ?>

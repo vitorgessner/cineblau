@@ -3,13 +3,20 @@ require 'config.php';
 require 'biblioteca_autenticacao.php';
 
 $pdo = getPDO();
+$emBreve = listarEmBreve($pdo);
 
-$sql = "CALL emBreve();";
+function listarEmBreve($pdo)
+{
+    $sql = "CALL emBreve();";
 
-$resultado = $pdo->query($sql);
+    $resultado = $pdo->query($sql);
 
-$emBreve = $resultado->fetchAll(PDO::FETCH_ASSOC);
-$resultado->closeCursor();
+    $emBreve = $resultado->fetchAll(PDO::FETCH_ASSOC);
+    $resultado->closeCursor();
+
+    return $emBreve;
+}
+
 $cidadeURL = $_GET['cidade'];
 
 $sql = "select c.*, ce.email FROM colaboradores as c
@@ -113,8 +120,8 @@ if (isset($_GET['search']) && isset($_GET['cidade'])){
             $estreiaQuebrada = explode("-", $estreia);
             $estreiaFormatada = $estreiaQuebrada[2] . '/' . $estreiaQuebrada[1] . '/' . $estreiaQuebrada[0]; ?>
             <article class="card_breve">
-                <div class="poster card">
-                    <a href="" class="img_card"><img src="images/<?= $caminho['posterCaminho'] ?>" alt="poster">
+                <div class="poster card cardInfo">
+                    <a href="filme.php?cidade=<?= $cidadeURL ?>&filme=<?= $caminho['titulo'] ?>" class="img_card"><img src="images/<?= $caminho['posterCaminho'] ?>" alt="poster">
                         <div class="teste">+</div>
                     </a>
                 </div>

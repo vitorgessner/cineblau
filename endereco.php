@@ -68,7 +68,7 @@ if (isset($_POST['acao'])){
     $resultado->bindParam(':id', $id);
 
     $resultado->execute();
-    header('location: index.php');
+    header("location: endereco.php?cidade=$cidadeURL");
 }
 
 if (isset($_GET['search']) && isset($_GET['cidade'])){
